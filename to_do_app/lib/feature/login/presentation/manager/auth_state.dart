@@ -8,3 +8,24 @@ final class AuthInitial extends AuthState {
   @override
   List<Object> get props => [];
 }
+
+
+final class AuthLoading extends AuthState {
+  @override
+  List<Object> get props => [];
+}
+
+final class AuthError extends AuthState {
+  final String errorMessage;
+
+  const AuthError(this.errorMessage);
+
+  @override
+  List<Object> get props => [];
+}
+
+
+final class AuthSuccess extends AuthState {
+  @override
+  List<Object> get props => [];
+}

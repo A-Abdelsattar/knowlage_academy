@@ -26,6 +26,7 @@ class _MapScreenState extends State<MapScreen> {
     super.initState();
   }
 
+  Set<Marker> markersSet={};
   String? mapStyle;
 
   @override
@@ -40,10 +41,40 @@ class _MapScreenState extends State<MapScreen> {
       body: Stack(
         children: [
           GoogleMap(
+            onTap: (pos){
+
+            },
             myLocationEnabled: true,
             style: mapStyle,
-            onMapCreated: (controller) {
+            initialCameraPosition: initialCameraPosition,
+            onMapCreated: (controller) async{
               googleMapController = controller;
+              markersSet.addAll(
+                {
+                  Marker(markerId:MarkerId("marker 1"),
+                      position: LatLng(30.106989262097898, 31.27998181121152),
+                      icon: await _loadCustomIcon(),
+                    infoWindow: InfoWindow(title: "Marker 1",
+                    snippet: "marker discreption",
+                      onTap: (){
+                      showModalBottomSheet(context: context, builder: (context)=>Column(children: [
+                        Text("data"),
+                        Row()
+                      ],));
+                      }
+                    )
+                  ),
+                  Marker(markerId:MarkerId("marker 2"),
+                      position: LatLng(30.045837495436192, 31.21329131981921),
+                      icon: await _loadCustomIcon()
+                  ),
+                },
+              );
+
+              setState(() {
+
+              });
+
             },
             cameraTargetBounds: CameraTargetBounds(
               LatLngBounds(
@@ -51,7 +82,8 @@ class _MapScreenState extends State<MapScreen> {
                 northeast: LatLng(31.09185692162761, 32.652668492677066),
               ),
             ),
-            initialCameraPosition: initialCameraPosition,
+
+            markers: markersSet
           ),
           Positioned(
             bottom: 50,
@@ -115,7 +147,7 @@ class _MapScreenState extends State<MapScreen> {
         currentPosition.latitude,
         currentPosition.longitude,
       );
-      _startTracking();
+      // _startTracking();
       debugPrint("current pos:${_currentPosition?.latitude.toString()}");
     });
   }
@@ -131,5 +163,10 @@ class _MapScreenState extends State<MapScreen> {
         ),
       );
     });
+  }
+
+_loadCustomIcon()async{
+    return await BitmapDescriptor.asset(ImageConfiguration(
+      size: Size(50, 50)), "assets/marker.png");
   }
 }
